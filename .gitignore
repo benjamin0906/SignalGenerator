@@ -1,8 +1,0 @@
-*.o
-*.d
-*.mk
-*.su
-*.list
-*.bin
-*.elf
-Debug
