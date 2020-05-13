@@ -12,8 +12,8 @@
 
 typedef enum
 {
-	Ch1 = 0,
-	Ch2,
+	Ch_1 = 0,
+	Ch_2,
 } dtChs;
 
 typedef struct

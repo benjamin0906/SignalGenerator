@@ -8,75 +8,90 @@
 #include "SignalGen_Types.h"
 #include "SignalGen.h"
 #include "TIM2.h"
+#include "RCC.h"
+#include "Utilities.h"
+#include "DMA.h"
 
-static uint32 Frequency;
-static uint32 SampleNumber;
+static uint32 Frequency = 400;
 static dtSignalGenMode Mode;
 static const float32 SineLookupTable[50] = {
-0.062790519529, 0.125333233564, 0.187381314586, 0.248689887165, 0.309016994375, 
-0.368124552685, 0.425779291565, 0.481753674102, 0.535826794979, 0.587785252292, 
-0.637423989749, 0.684547105929, 0.728968627421, 0.770513242776, 0.809016994375, 
-0.844327925502, 0.876306680044, 0.904827052466, 0.929776485888, 0.951056516295, 
-0.968583161129, 0.982287250729, 0.992114701314, 0.998026728428, 1.000000000000, 
-0.998026728428, 0.992114701314, 0.982287250729, 0.968583161129, 0.951056516295, 
-0.929776485888, 0.904827052466, 0.876306680044, 0.844327925502, 0.809016994375, 
-0.770513242776, 0.728968627421, 0.684547105929, 0.637423989749, 0.587785252292, 
-0.535826794979, 0.481753674102, 0.425779291565, 0.368124552685, 0.309016994375, 
-0.248689887165, 0.187381314586, 0.125333233564, 0.062790519529, 0.000000000000,
+0.000000000,0.062790520,0.125333234,0.187381315,0.248689887,
+0.309016994,0.368124553,0.425779292,0.481753674,0.535826795,
+0.587785252,0.637423990,0.684547106,0.728968627,0.770513243,
+0.809016994,0.844327926,0.876306680,0.904827052,0.929776486,
+0.951056516,0.968583161,0.982287251,0.992114701,0.998026728,
+1.000000000,0.998026728,0.992114701,0.982287251,0.968583161,
+0.951056516,0.929776486,0.904827052,0.876306680,0.844327926,
+0.809016994,0.770513243,0.728968627,0.684547106,0.637423990,
+0.587785252,0.535826795,0.481753674,0.425779292,0.368124553,
+0.309016994,0.248689887,0.187381315,0.125333234,0.062790520,
 };
-static uint32 Iterator;
+
+static uint32 Ch1Pattern[2000];
+static uint32 Ch2Pattern[2000];
 
 void SignalGen_Init(void);
 void SignalGen_Trigger(void);
+void SetModulatorFreq(uint32 Freq);
+void SineGen(uint32 Sample);
+
+extern void Blink(void);
 
 void SignalGen_Init(void)
 {
-	TIM2_Init(&SignalGen_Trigger);
-	SampleNumber = TIM2_SetPeriod(10000);
+	TIM2_Init(&Blink);
+	float32 fperiod = sqrt(ClockFreq/Frequency);
+	uint32 period = fperiod;
+	if((fperiod - (float32)period) >= 0.5) period++;
+	TIM2_SetPeriod(period);
+
+	SineGen(period);
+
+	DMA_Set(DMA_1,Ch5,(uint32)Ch1Pattern, TIM2_GetAdd(1), DMA_CS4|DMA_MEMREAD|DMA_CIRC|DMA_PER_32|DMA_MEM_INC|DMA_MEM_32|DMA_PRIO_VH,0);
+	DMA_Set(DMA_1,Ch7,(uint32)Ch2Pattern, TIM2_GetAdd(2), DMA_CS4|DMA_MEMREAD|DMA_CIRC|DMA_PER_32|DMA_MEM_INC|DMA_MEM_32|DMA_PRIO_VH,0);
+	DMA_Start(DMA_1,Ch5, period);
+	DMA_Start(DMA_1,Ch7, period);
 }
 
-dtChDuty SineGen(void)
+void SineGen(uint32 Sample)
 {
-	dtChDuty Ret = {0, Ch1};
+	uint32 Result;
 	float32 Value1;
 	float32 Value2;
-	float32 LookupRes = (float32)SampleNumber/(sizeof(SineLookupTable)>>1);
+	float32 LookupRes = (float32)Sample/(sizeof(SineLookupTable)>>1);
 	float32 EndValue;
-	uint32 index = Iterator/LookupRes;
+	uint32 looper;
 
-	/* In case of too high index the index shall be decreased by the max index value. This is due to the fact that
-	 * the sine wave is periodical */
-	if(index >= sizeof(SineLookupTable)) index -= sizeof(SineLookupTable);
-	Value1 = SineLookupTable[index++];
-	if(index >= sizeof(SineLookupTable)) index -= sizeof(SineLookupTable);
-	Value2 = SineLookupTable[index];
-
-	/* Linear interpolation of the sine wave */
-	EndValue = Value1 + (Value2-Value1)*((float32)Iterator/LookupRes-index);
-
-	/* Calculation of the required duty cycle */
-	EndValue *= (float32)SampleNumber;
-
-	/* Rounding of the duty cycle */
-	Ret.Duty = (uint32)EndValue;
-	EndValue -= (float32)Ret.Duty;
-	if(EndValue >= 0.5) Ret.Duty++;
-
-	if((float32)Iterator >= ((float32) SampleNumber/2)) Ret.Ch = Ch2;
-
-	return Ret;
-}
-
-void SignalGen_Trigger(void)
-{
-	dtChDuty Duty;
-	switch(Mode)
+	for(looper = 0; looper<Sample; looper++)
 	{
-	case Sine:
-		Duty = SineGen();
-		break;
+		uint32 index = looper/LookupRes;
+
+		/* In case of too high index the index shall be decreased by the max index value. This is due to the fact that
+		 * the sine wave is periodical */
+		{
+			uint32 LookupIndex = index;
+			if(LookupIndex >= (sizeof(SineLookupTable)>>2)) LookupIndex -= sizeof(SineLookupTable)>>2;
+			Value1 = SineLookupTable[LookupIndex++];
+			if(LookupIndex >= (sizeof(SineLookupTable)>>2)) LookupIndex -= sizeof(SineLookupTable)>>2;
+			Value2 = SineLookupTable[LookupIndex];
+		}
+		/* Linear interpolation of the sine wave */
+		EndValue = Value1 + (Value2-Value1)*((float32)looper/LookupRes-index);
+
+		/* Calculation of the required duty cycle */
+		EndValue *= ((float32)Sample);
+
+		/* Rounding of the duty cycle */
+		Result = (uint32)EndValue;
+		EndValue -= (float32)Result;
+		if(EndValue >= 0.5) Result++;
+
+		Ch1Pattern[looper] = 0;
+		Ch2Pattern[looper] = 0;
+		if((float32)looper >= ((float32) Sample/2))
+		{
+			Ch2Pattern[looper] = Result;
+		}
+		else Ch1Pattern[looper] = Result;
 	}
-	Iterator++;
-	Duty.Duty = 4000;
-	TIM2_SetDuty(Duty.Duty,Duty.Ch);
 }
