@@ -39,10 +39,6 @@ int main(void)
 
 	RCC_ClockSet(80000000);
 
-	//TIM2_Init(&Blink);
-
-	//BasicTIM_Set(TIM6, &Blink);
-
 	GPIO_Set(PORT_A, 5, GPIO_OUTPUT|GPIO_OTYPE_PP|GPIO_OSPEED_MS);
 	GPIO_Set(PORT_B, 13, GPIO_OUTPUT|GPIO_OTYPE_PP|GPIO_OSPEED_MS);
 	GPIO_Set(PORT_C, 13, GPIO_INPUT);
@@ -51,6 +47,8 @@ int main(void)
 	GPIO_Set(PORT_A, 1, GPIO_ALT1|GPIO_OTYPE_PP|GPIO_OSPEED_VHS);//TIM15_CH2
 
 	SignalGen_Init();
+
+	SignalGen_Apply(60);
 
 	GPIO_Write(PORT_A, 5, 1);
 	GPIO_Write(PORT_A, 5, 0);
@@ -64,6 +62,7 @@ int main(void)
 		}
 		else
 		{
+			SignalGen_Stop();
 			GPIO_Write(PORT_A, 5, 0);
 		}
 

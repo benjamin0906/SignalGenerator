@@ -15,15 +15,6 @@ static void (*InterruptFunction)(void);
 void TIM2_Init(void (*PeriodFunction)(void));
 void TIM2_SetPeriod(uint32 period);
 uint32* TIM2_GetCompAddr(uint8 Ch);
-uint32 TIM2_GetAdd(uint8 ch);
-
-uint32 TIM2_GetAdd(uint8 ch)
-{
-	uint32 ret;
-	if(ch == 1) ret = (uint32)&TIM2->CCR1;
-	else if(ch == 2) ret = (uint32)&TIM2->CCR2;
-	return ret;
-}
 
 void TIM2_Init(void (*PeriodFunction)(void))
 {

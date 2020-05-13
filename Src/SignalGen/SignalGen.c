@@ -12,7 +12,6 @@
 #include "Utilities.h"
 #include "DMA.h"
 
-static uint32 Frequency = 400;
 static dtSignalGenMode Mode;
 static const float32 SineLookupTable[50] = {
 0.000000000,0.062790520,0.125333234,0.187381315,0.248689887,
@@ -34,23 +33,41 @@ void SignalGen_Init(void);
 void SignalGen_Trigger(void);
 void SetModulatorFreq(uint32 Freq);
 void SineGen(uint32 Sample);
+void SignalGen_Apply(uint32 Freq);
+void SignalGen_Stop(void);
 
 extern void Blink(void);
 
 void SignalGen_Init(void)
 {
 	TIM2_Init(&Blink);
-	float32 fperiod = sqrt(ClockFreq/Frequency);
+
+	DMA_Set(DMA_1,Ch5,Ch1Pattern, TIM2_GetCompAddr(1), DMA_CS4|DMA_MEMREAD|DMA_CIRC|DMA_PER_32|DMA_MEM_INC|DMA_MEM_32|DMA_PRIO_VH,0);
+	DMA_Set(DMA_1,Ch7,Ch2Pattern, TIM2_GetCompAddr(2), DMA_CS4|DMA_MEMREAD|DMA_CIRC|DMA_PER_32|DMA_MEM_INC|DMA_MEM_32|DMA_PRIO_VH,0);
+}
+
+void SignalGen_Apply(uint32 Freq)
+{
+	float32 fperiod = sqrt(ClockFreq/Freq);
 	uint32 period = fperiod;
 	if((fperiod - (float32)period) >= 0.5) period++;
 	TIM2_SetPeriod(period);
 
 	SineGen(period);
 
-	DMA_Set(DMA_1,Ch5,(uint32)Ch1Pattern, TIM2_GetAdd(1), DMA_CS4|DMA_MEMREAD|DMA_CIRC|DMA_PER_32|DMA_MEM_INC|DMA_MEM_32|DMA_PRIO_VH,0);
-	DMA_Set(DMA_1,Ch7,(uint32)Ch2Pattern, TIM2_GetAdd(2), DMA_CS4|DMA_MEMREAD|DMA_CIRC|DMA_PER_32|DMA_MEM_INC|DMA_MEM_32|DMA_PRIO_VH,0);
 	DMA_Start(DMA_1,Ch5, period);
 	DMA_Start(DMA_1,Ch7, period);
+}
+
+void SignalGen_ApplyPattern(uint32 freq, float32 *Pattern, uint32 PatternLenght)
+{
+
+}
+
+void SignalGen_Stop(void)
+{
+	DMA_Stop(DMA_1,Ch5);
+	DMA_Stop(DMA_1,Ch7);
 }
 
 void SineGen(uint32 Sample)
