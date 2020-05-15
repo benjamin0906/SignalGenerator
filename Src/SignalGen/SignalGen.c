@@ -71,8 +71,13 @@ void SignalGen_ApplyPattern(uint32 freq, float32 *Pattern, uint32 PatternLenght)
 
 void SignalGen_Stop(void)
 {
+	/* Turn off the DMA channels */
 	DMA_Stop(DMA_1,Ch5);
 	DMA_Stop(DMA_1,Ch7);
+
+	/* Set the comparator registers to zero */
+	*TIM2_GetCompAddr(1) = 0;
+	*TIM2_GetCompAddr(2) = 0;
 }
 
 void SineGen(uint32 Sample)
