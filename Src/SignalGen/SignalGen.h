@@ -17,7 +17,7 @@ typedef enum
 } dtSignalGenMode;
 
 extern void SignalGen_Init(void);
-extern void SignalGen_Apply(uint32 Freq);
+extern void SignalGen_Apply(float32 Freq);
 extern void SignalGen_Stop(void);
 
 #endif /* SIGNALGEN_SIGNALGEN_H_ */

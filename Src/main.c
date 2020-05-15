@@ -14,14 +14,28 @@
 #include "TIM15.h"
 #include "SignalGen.h"
 #include "Utilities.h"
+#include "MelodyPlayer.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+uint32 Tick;
+
 void Blink(void)
 {
 	GPIO_Toggle(PORT_B, 13);
+}
+
+void TickHandler(void)
+{
+	Tick++;
+	Blink();
+}
+
+uint32 GetTicks(void)
+{
+	return Tick;
 }
 
 int main(void)
@@ -38,6 +52,7 @@ int main(void)
 	Pwr_SetVoltageRange(Range_1);
 
 	RCC_ClockSet(80000000);
+	BasicTIM_Set(TIM6,TickHandler);
 
 	GPIO_Set(PORT_A, 5, GPIO_OUTPUT|GPIO_OTYPE_PP|GPIO_OSPEED_MS);
 	GPIO_Set(PORT_B, 13, GPIO_OUTPUT|GPIO_OTYPE_PP|GPIO_OSPEED_MS);
@@ -48,7 +63,35 @@ int main(void)
 
 	SignalGen_Init();
 
-	SignalGen_Apply(60);
+	dtMusicNoteDesc notes[] = {
+			{ .MusicNote = C4, .Beat = Ti},
+			{ .MusicNote = E4, .Beat = Ti},
+			{ .MusicNote = C4, .Beat = Ti},
+			{ .MusicNote = E4, .Beat = Ti},
+			{ .MusicNote = G4, .Beat = Ta},
+			{ .MusicNote = G4, .Beat = Ta},
+			{ .MusicNote = C4, .Beat = Ti},
+			{ .MusicNote = E4, .Beat = Ti},
+			{ .MusicNote = C4, .Beat = Ti},
+			{ .MusicNote = E4, .Beat = Ti},
+			{ .MusicNote = G4, .Beat = Ta},
+			{ .MusicNote = G4, .Beat = Ta},
+			{ .MusicNote = C5, .Beat = Ti},
+			{ .MusicNote = B4, .Beat = Ti},
+			{ .MusicNote = A4, .Beat = Ti},
+			{ .MusicNote = G4, .Beat = Ti},
+			{ .MusicNote = F4, .Beat = Ta},
+			{ .MusicNote = A4, .Beat = Ta},
+			{ .MusicNote = G4, .Beat = Ti},
+			{ .MusicNote = F4, .Beat = Ti},
+			{ .MusicNote = E4, .Beat = Ti},
+			{ .MusicNote = D4, .Beat = Ti},
+			{ .MusicNote = C4, .Beat = Ta},
+			{ .MusicNote = C4, .Beat = Ta},
+	};
+	dtMelody melody = {.Length = sizeof(notes), .beat = 5, .Notes = notes};
+
+	MelodyPlayer_Start(melody);
 
 	GPIO_Write(PORT_A, 5, 1);
 	GPIO_Write(PORT_A, 5, 0);
@@ -56,6 +99,7 @@ int main(void)
 
 	for(;;)
 	{
+		MelodyPlayer_Task();
 		if(GPIO_Read(PORT_C, 13))
 		{
 			GPIO_Write(PORT_A, 5, 1);

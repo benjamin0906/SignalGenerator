@@ -33,24 +33,29 @@ void SignalGen_Init(void);
 void SignalGen_Trigger(void);
 void SetModulatorFreq(uint32 Freq);
 void SineGen(uint32 Sample);
-void SignalGen_Apply(uint32 Freq);
+void SignalGen_Apply(float32 Freq);
 void SignalGen_Stop(void);
 
 extern void Blink(void);
 
 void SignalGen_Init(void)
 {
-	TIM2_Init(&Blink);
+	TIM2_Init(0);
 
 	DMA_Set(DMA_1,Ch5,Ch1Pattern, TIM2_GetCompAddr(1), DMA_CS4|DMA_MEMREAD|DMA_CIRC|DMA_PER_32|DMA_MEM_INC|DMA_MEM_32|DMA_PRIO_VH,0);
 	DMA_Set(DMA_1,Ch7,Ch2Pattern, TIM2_GetCompAddr(2), DMA_CS4|DMA_MEMREAD|DMA_CIRC|DMA_PER_32|DMA_MEM_INC|DMA_MEM_32|DMA_PRIO_VH,0);
 }
 
-void SignalGen_Apply(uint32 Freq)
+void SignalGen_Apply(float32 Freq)
 {
-	float32 fperiod = sqrt(ClockFreq/Freq);
-	uint32 period = fperiod;
-	if((fperiod - (float32)period) >= 0.5) period++;
+	uint32 period = 0;
+	if(Freq >= 0)
+	{
+		float32 fperiod = sqrt(ClockFreq/Freq);
+		period = fperiod;
+		if((fperiod - (float32)period) >= 0.5) period++;
+	}
+
 	TIM2_SetPeriod(period);
 
 	SineGen(period);
