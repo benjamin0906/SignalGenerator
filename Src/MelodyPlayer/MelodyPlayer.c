@@ -8,8 +8,10 @@
 #include "MelodyPlayer_Types.h"
 #include "MelodyPlayer.h"
 #include "SignalGen.h"
+#include "main.h"
+#include "Utilities.h"
 
-static uint32 Bpm = 200;
+static uint32 Bpm = 555*4;
 static uint32 NoteCounter;
 static dtState State;
 static dtMelody CurrentMelody;
@@ -18,8 +20,9 @@ static uint32 Timeout;
 
 void MelodyPlayer_Task(void);
 void MelodyPlayer_Start(dtMelody melody);
+void MelodyPlayer_Stop(void);
 float32 ChooseFreq(uint8 Note);
-
+uint32 TimeoutFinder(void);
 
 void MelodyPlayer_Task(void)
 {
@@ -33,7 +36,7 @@ void MelodyPlayer_Task(void)
 			Time = GetTicks();
 			SignalGen_Apply(ChooseFreq(CurrentMelody.Notes[NoteCounter].MusicNote));
 			Timeout = Bpm;
-			if(CurrentMelody.Notes[NoteCounter].Beat == Ta) Timeout *= 2;
+			Timeout = TimeoutFinder();
 			NoteCounter++;
 			State = Wait;
 		}
@@ -60,7 +63,21 @@ void MelodyPlayer_Start(dtMelody melody)
 		CurrentMelody = melody;
 		NoteCounter = 0;
 	}
+}
 
+void MelodyPlayer_Stop(void)
+{
+	SignalGen_Stop();
+	State = Idle;
+}
+
+uint32 TimeoutFinder(void)
+{
+	float32 rythm = Bpm;
+	rythm *= (float32)CurrentMelody.Notes[NoteCounter].Beat.Nominator;
+	rythm /= (float32)CurrentMelody.Notes[NoteCounter].Beat.Denominator;
+	if((rythm - ((uint32)rythm)) >= 0.5) rythm+=1;
+	return (uint32) rythm;
 }
 
 float32 ChooseFreq(uint8 Note)

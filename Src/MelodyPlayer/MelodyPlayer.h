@@ -132,16 +132,14 @@ typedef enum
 	
 } dtMusicNotes;
 
-typedef enum
-{
-	Ti = 0,
-	Ta = 1,
-};
-
 typedef struct
 {
-	uint8 MusicNote	:7;
-	uint8 Beat		:1;
+	uint8 MusicNote;
+	struct
+	{
+	uint8 Nominator;
+	uint8 Denominator;
+	} Beat;
 } dtMusicNoteDesc;
 
 typedef struct
@@ -153,5 +151,6 @@ typedef struct
 
 extern void MelodyPlayer_Task(void);
 extern void MelodyPlayer_Start(dtMelody melody);
+extern void MelodyPlayer_Stop(void);
 
 #endif /* MELODYPLAYER_MELODYPLAYER_H_ */

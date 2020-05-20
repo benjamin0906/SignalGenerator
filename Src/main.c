@@ -15,6 +15,7 @@
 #include "SignalGen.h"
 #include "Utilities.h"
 #include "MelodyPlayer.h"
+#include "Melodies.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
@@ -63,39 +64,55 @@ int main(void)
 
 	SignalGen_Init();
 
-	dtMusicNoteDesc notes[] = {
-			{ .MusicNote = C4, .Beat = Ti},
-			{ .MusicNote = E4, .Beat = Ti},
-			{ .MusicNote = C4, .Beat = Ti},
-			{ .MusicNote = E4, .Beat = Ti},
-			{ .MusicNote = G4, .Beat = Ta},
-			{ .MusicNote = G4, .Beat = Ta},
-			{ .MusicNote = C4, .Beat = Ti},
-			{ .MusicNote = E4, .Beat = Ti},
-			{ .MusicNote = C4, .Beat = Ti},
-			{ .MusicNote = E4, .Beat = Ti},
-			{ .MusicNote = G4, .Beat = Ta},
-			{ .MusicNote = G4, .Beat = Ta},
-			{ .MusicNote = C5, .Beat = Ti},
-			{ .MusicNote = B4, .Beat = Ti},
-			{ .MusicNote = A4, .Beat = Ti},
-			{ .MusicNote = G4, .Beat = Ti},
-			{ .MusicNote = F4, .Beat = Ta},
-			{ .MusicNote = A4, .Beat = Ta},
-			{ .MusicNote = G4, .Beat = Ti},
-			{ .MusicNote = F4, .Beat = Ti},
-			{ .MusicNote = E4, .Beat = Ti},
-			{ .MusicNote = D4, .Beat = Ti},
-			{ .MusicNote = C4, .Beat = Ta},
-			{ .MusicNote = C4, .Beat = Ta},
-	};
-	dtMelody melody = {.Length = sizeof(notes), .beat = 5, .Notes = notes};
+	/*dtMusicNoteDesc notes[] = {
+			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = E4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = E4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 2},
+			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 2},
+			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = E4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = E4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 2},
+			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 2},
+			{ .MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = B4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = A4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = F4, .Beat.Nominator = 1, .Beat.Denominator = 2},
+			{ .MusicNote = A4, .Beat.Nominator = 1, .Beat.Denominator = 2},
+			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = F4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = E4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = D4, .Beat.Nominator = 1, .Beat.Denominator = 4},
+			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 2},
+			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 2},
+	};//*/
+	/*dtMusicNoteDesc dixie[] = {
+				{ .MusicNote = G5, .Beat.Nominator = 1, .Beat.Denominator = 4},
+				{ .MusicNote = E5, .Beat.Nominator = 1, .Beat.Denominator = 4},
+				{ .MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 2},
+				{ .MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 2},
+				{ .MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 2},
+				{ .MusicNote = D5, .Beat.Nominator = 1, .Beat.Denominator = 4},
+				{ .MusicNote = E5, .Beat.Nominator = 1, .Beat.Denominator = 4},
+				{ .MusicNote = F5, .Beat.Nominator = 1, .Beat.Denominator = 4},//
+				{ .MusicNote = G5, .Beat.Nominator = 1, .Beat.Denominator = 2},
+				{ .MusicNote = G5, .Beat.Nominator = 1, .Beat.Denominator = 2},
+				{ .MusicNote = G5, .Beat.Nominator = 1, .Beat.Denominator = 2},
+				{ .MusicNote = E5, .Beat.Nominator = 1, .Beat.Denominator = 2},//
+		};*/
+	dtMelody melody = {.Length = sizeof(StarWarsMainTheme)/sizeof(dtMusicNoteDesc), .beat = 5, .Notes = StarWarsMainTheme};
 
 	MelodyPlayer_Start(melody);
 
 	GPIO_Write(PORT_A, 5, 1);
 	GPIO_Write(PORT_A, 5, 0);
 	GPIO_Write(PORT_B, 13, 0);
+
+	uint8 sound = 0;
 
 	for(;;)
 	{
@@ -106,7 +123,7 @@ int main(void)
 		}
 		else
 		{
-			SignalGen_Stop();
+			MelodyPlayer_Stop();
 			GPIO_Write(PORT_A, 5, 0);
 		}
 
