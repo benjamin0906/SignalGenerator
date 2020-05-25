@@ -11,7 +11,7 @@
 #include "main.h"
 #include "Utilities.h"
 
-static uint32 Bpm = 555*4;
+static uint32 Bpm = 268*4;
 static uint32 NoteCounter;
 static dtState State;
 static dtMelody CurrentMelody;

@@ -64,47 +64,7 @@ int main(void)
 
 	SignalGen_Init();
 
-	/*dtMusicNoteDesc notes[] = {
-			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = E4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = E4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 2},
-			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 2},
-			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = E4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = E4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 2},
-			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 2},
-			{ .MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = B4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = A4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = F4, .Beat.Nominator = 1, .Beat.Denominator = 2},
-			{ .MusicNote = A4, .Beat.Nominator = 1, .Beat.Denominator = 2},
-			{ .MusicNote = G4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = F4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = E4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = D4, .Beat.Nominator = 1, .Beat.Denominator = 4},
-			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 2},
-			{ .MusicNote = C4, .Beat.Nominator = 1, .Beat.Denominator = 2},
-	};//*/
-	/*dtMusicNoteDesc dixie[] = {
-				{ .MusicNote = G5, .Beat.Nominator = 1, .Beat.Denominator = 4},
-				{ .MusicNote = E5, .Beat.Nominator = 1, .Beat.Denominator = 4},
-				{ .MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 2},
-				{ .MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 2},
-				{ .MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 2},
-				{ .MusicNote = D5, .Beat.Nominator = 1, .Beat.Denominator = 4},
-				{ .MusicNote = E5, .Beat.Nominator = 1, .Beat.Denominator = 4},
-				{ .MusicNote = F5, .Beat.Nominator = 1, .Beat.Denominator = 4},//
-				{ .MusicNote = G5, .Beat.Nominator = 1, .Beat.Denominator = 2},
-				{ .MusicNote = G5, .Beat.Nominator = 1, .Beat.Denominator = 2},
-				{ .MusicNote = G5, .Beat.Nominator = 1, .Beat.Denominator = 2},
-				{ .MusicNote = E5, .Beat.Nominator = 1, .Beat.Denominator = 2},//
-		};*/
-	dtMelody melody = {.Length = sizeof(StarWarsMainTheme)/sizeof(dtMusicNoteDesc), .beat = 5, .Notes = StarWarsMainTheme};
+	dtMelody melody = {.Length = sizeof(CantinaBand)/sizeof(dtMusicNoteDesc), .beat = 5, .Notes = CantinaBand};
 
 	MelodyPlayer_Start(melody);
 

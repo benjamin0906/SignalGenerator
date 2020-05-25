@@ -135,3 +135,55 @@ dtMusicNoteDesc StarWarsMainTheme[126] = {
 			{ .MusicNote = F5, .Beat.Nominator = 1, .Beat.Denominator = 12},
 			{ .MusicNote = D5, .Beat.Nominator = 1, .Beat.Denominator = 2},
 	};
+
+
+dtMusicNoteDesc dixie[12] = {
+			{ .MusicNote = A5, .Beat.Nominator = 1, .Beat.Denominator = 16},
+			{ .MusicNote = C6, .Beat.Nominator = 1, .Beat.Denominator = 16},
+			{ .MusicNote = F5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+			{ .MusicNote = F5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+			{ .MusicNote = F5, .Beat.Nominator = 1, .Beat.Denominator = 16},
+			{ .MusicNote = G5, .Beat.Nominator = 1, .Beat.Denominator = 16},
+			{ .MusicNote = A5, .Beat.Nominator = 1, .Beat.Denominator = 16},
+			{ .MusicNote = B5, .Beat.Nominator = 1, .Beat.Denominator = 16},//
+			{ .MusicNote = C6, .Beat.Nominator = 1, .Beat.Denominator = 8},//
+			{ .MusicNote = C6, .Beat.Nominator = 1, .Beat.Denominator = 8},//
+			{ .MusicNote = C6, .Beat.Nominator = 1, .Beat.Denominator = 8},//
+			{ .MusicNote = A5, .Beat.Nominator = 1, .Beat.Denominator = 8},//
+	};
+
+dtMusicNoteDesc LaCucaracha[20] = {
+		{.MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = F5, .Beat.Nominator = 3, .Beat.Denominator = 8},
+		{.MusicNote = A5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = Pause, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = F5, .Beat.Nominator = 3, .Beat.Denominator = 8},
+		{.MusicNote = A5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = Pause, .Beat.Nominator = 1, .Beat.Denominator = 2},
+		{.MusicNote = F5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = F5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = E5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = E5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = D5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = D5, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = C5, .Beat.Nominator = 1, .Beat.Denominator = 2},
+		{.MusicNote = Pause, .Beat.Nominator = 1, .Beat.Denominator = 8},
+};
+
+dtMusicNoteDesc CantinaBand[10] = {
+		{.MusicNote = B4, .Beat.Nominator = 3, .Beat.Denominator = 8},
+		{.MusicNote = E5, .Beat.Nominator = 3, .Beat.Denominator = 8},
+		{.MusicNote = B4, .Beat.Nominator = 3, .Beat.Denominator = 8},
+		{.MusicNote = E5, .Beat.Nominator = 3, .Beat.Denominator = 8},
+		{.MusicNote = B4, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = E5, .Beat.Nominator = 3, .Beat.Denominator = 8},
+		{.MusicNote = B4, .Beat.Nominator = 3, .Beat.Denominator = 16},
+		{.MusicNote = Pause, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = A4_half, .Beat.Nominator = 1, .Beat.Denominator = 8},
+		{.MusicNote = B4, .Beat.Nominator = 3, .Beat.Denominator = 8},
+};

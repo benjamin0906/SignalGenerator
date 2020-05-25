@@ -11,5 +11,8 @@
 #include "MelodyPlayer.h"
 
 extern dtMusicNoteDesc StarWarsMainTheme[126];
+extern dtMusicNoteDesc dixie[12];
+extern dtMusicNoteDesc LaCucaracha[20];
+extern dtMusicNoteDesc CantinaBand[10];
 
 #endif /* MELODYPLAYER_MELODIES_H_ */
